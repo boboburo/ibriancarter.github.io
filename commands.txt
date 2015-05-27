@@ -1,8 +1,0 @@
-
-ipython nbconvert berlin_slides.ipynb --to slides --reveal-prefix "http://cdn.jsdelivr.net/reveal.js/2.6.2"
-
-
-python -m SimpleHTTPServer 8000
-
-
-http://127.0.0.1:8000/berlin_slides.slides.html?theme=sky#/
