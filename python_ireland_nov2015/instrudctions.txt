@@ -1,0 +1,11 @@
+cd C:\Users\IBM_ADMIN\Desktop\PyData_Berlin_May15\slides
+
+
+python -m SimpleHTTPServer 8000
+
+
+
+http://127.0.0.1:8000/berlin_slides.slides.html?theme=sky#/
+
+
+ipython nbconvert PythonDublin_Nov15_slides.ipynb --to slides --reveal-prefix "http://cdn.jsdelivr.net/reveal.js/2.6.2"
