@@ -1,1 +1,1 @@
-http://ibriancarter.github.io/berlin_pydata_2015/index.html
+http://ibriancarter.github.io/PythonDublin_Nov15_slides.slides.html/index.html
