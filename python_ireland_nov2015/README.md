@@ -1,1 +1,1 @@
-http://ibriancarter.github.io/PythonDublin_Nov15_slides.slides.html/index.html
+http://ibriancarter.github.io/python_ireland_nov2015/index.html
