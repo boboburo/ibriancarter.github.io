@@ -1,0 +1,40 @@
+---
+title: "example-5b"
+output: html_document
+runtime: shiny
+---
+
+This applicatio illustrate how to use shiny in an interactive RMarkdown document. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+library(ggplot2)
+```
+
+## Plot with a drop down
+
+The pane is split into two parts with the drop down on the left and plot on the right. I normally start constructing the layout - this is what the ui part of regular shiny app looks like. And then working out the the server part. 
+
+```{r myplot, echo = T}
+selectInput("col", "Choose numeric column to graph:", 
+                  choices = c(colnames(diamonds[,sapply(diamonds, is.numeric)])))
+
+#Now work out the output
+output$diaHist = renderPlot({
+    ggplot(diamonds, aes_string(x=input$col)) + geom_histogram()
+})
+
+plotOutput("diaHist")
+```
+
+## Nice Data Table
+
+Dynamic tables in your document with [DataTables](http://rstudio.github.io/DT/) . DataTables is a wrapper around the javascript library https://datatables.net/. Don't confuse with the [data.table](https://github.com/Rdatatable/data.table/wikidata.table) library. 
+
+```{r pressure, echo=FALSE}
+library(DT)
+datatable(head(diamonds,n=10)) #Be careful don't send a million rows to the browser..... 
+```
+
+

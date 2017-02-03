@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Brian Carter" />
+  <title>ARA: Shiny Learning Session I</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="index_files/reveal.js-3.3.0/css/reveal.css"/>
+
+
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+</style>
+
+<link rel="stylesheet" href="index_files/reveal.js-3.3.0/css/theme/night.css" id="theme">
+
+<style type="text/css">
+.reveal section img {
+  background: rgba(255, 255, 255, 0.85);
+}
+</style>
+
+  <!-- some tweaks to reveal css -->
+  <style type="text/css">
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+
+
+
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+  </style>
+
+    <style type="text/css">code{white-space: pre;}</style>
+
+    <link rel="stylesheet" href="slides.css"/>
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'index_files/reveal.js-3.3.0/css/print/pdf.css' : 'index_files/reveal.js-3.3.0/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <!--[if lt IE 9]>
+    <script src="index_files/reveal.js-3.3.0/lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <link href="index_files/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">ARA: Shiny Learning Session I</h1>
+  <h1 class="subtitle">Introduction to Shiny</h1>
+    <h2 class="author">Brian Carter</h2>
+    <h3 class="date">Feburary 3rd, 2017</h3>
+</section>
+
+<section><section id="agenda" class="titleslide slide level1"><h1>Agenda</h1></section><section id="agenda-1" class="slide level2">
+<h1>Agenda</h1>
+<ul>
+<li><p>What is Shiny?</p></li>
+<li><p>Examples.</p></li>
+<li><p>Next steps and resources.</p></li>
+</ul>
+</section><section id="these-learning-materials" class="slide level2">
+<h1>These learning materials</h1>
+<ul>
+<li><p>These slides were created in rmarkdown using reveal.js. Read more about it <a href="http://rmarkdown.rstudio.com/revealjs_presentation_format.html">here</a>.</p></li>
+<li><p>You can access these slides on our server at</p></li>
+</ul>
+<p><a href="http://apsld0058:3838/r-shiny-20-Jan-17/ara-shiny-presentation.html#/"><a href="http://apsld0058:3838/r-shiny-20-Jan-17/ara-shiny-presentation.html#/" class="uri">http://apsld0058:3838/r-shiny-20-Jan-17/ara-shiny-presentation.html#/</a></a>.</p>
+<ul>
+<li>All code for examples and creating these slides are on Codehub:</li>
+</ul>
+<p><a href="https://codehub.optum.com/payment-integrity-analytics/shiny-server/tree/master"><a href="https://codehub.optum.com/payment-integrity-analytics/shiny-server/tree/master" class="uri">https://codehub.optum.com/payment-integrity-analytics/shiny-server/tree/master</a></a>.</p>
+</section></section>
+<section><section id="introduction" class="titleslide slide level1"><h1>Introduction</h1></section><section id="motivation" class="slide level2">
+<h1>Motivation</h1>
+<p>R is a powerful tool for data analysis</p>
+<ul>
+<li><p>State of the art statistical power.</p></li>
+<li><p>Excellent for visualization (ggplot2).</p></li>
+<li><p>Large community of users. <br></p></li>
+</ul>
+<p>but…</p>
+<div class="fragment">
+<ul>
+<li><p>Personal experience, not a shared one.</p></li>
+<li><p>Output is usually in static formats.</p></li>
+<li><p>DS projects go to PowerPoint to die.</p></li>
+<li>Modern visualization is interactive and browser-based.</li>
+</ul>
+</div>
+</section><section id="data-products" class="slide level2">
+<h1>Data Products</h1>
+<ul>
+<li><p>Data product is the <strong>production output</strong> from a statistical analysis.</p></li>
+<li><p>Automate complex analysis tasks.</p></li>
+<li><p>Expand the utility of a data information model, algorithm or inference.</p></li>
+</ul>
+<p><small><em>Roger Peng, Developing Data Products, Coursera (see links)</em></small></p>
+<div class="fragment">
+<ul>
+<li><p>The analysis is complete and conclusions reached.</p></li>
+<li><p>Build an <strong>artifact</strong> for other people to engage with your conclusions.</p></li>
+<li>Not the end, may lead to further work - <em>it lives…</em></li>
+</ul>
+</div>
+<aside class="notes">
+It is important that the process of building the application or artifact does not detract from the analysis that you are trying to complete.
+</aside>
+</section><section id="what-is-shiny" class="slide level2">
+<h1>What is Shiny?</h1>
+<ul>
+<li><p>A web application framework for R.</p></li>
+<li><p>Modern web UI with attractive defaults.</p></li>
+<li>Requires no knowledge of HTML, JavaScript or CSS
+<ul>
+<li>but with a little knowledge is completely customizable.</li>
+</ul></li>
+<li><p>Integrates with existing JavaScript libraries (D3, Leaflet, etc.).</p></li>
+<li><p>Reactive programming model.</p></li>
+<li><p>Use R packages in real time with given data and inputs.</p></li>
+</ul>
+<p>but ….</p>
+<div class="fragment">
+<ul>
+<li><p>Not designed to serve many users.</p></li>
+<li><p>Not going to build a web-store.</p></li>
+</ul>
+<aside class="notes">
+<p>Reactive programming allows dramatically simpler code. Build great user interfaces very robustly/concisely.</p>
+<p>It is not intended for general purpose. Doesn’t replace Ruby on Rails. You wouldn’t build a web-store with it.</p>
+</aside>
+</section><section id="examples" class="slide level2">
+<h1>Examples</h1>
+<p><a href="https://shiny.rstudio.com/gallery/">RStudio Examples</a></p>
+<p><a href="http://www.showmeshiny.com/">Show me Shiny</a></p>
+<p><a href="https://tvdwiele.shinyapps.io/Santander-Product-Recommendation/">Kaggle 2nd Place Winner: Santander</a></p>
+</section></section>
+<section><section id="learning" class="titleslide slide level1"><h1>Learning</h1></section><section id="five-examples" class="slide level2">
+<h1>Five Examples</h1>
+<ul>
+<li>Intro to Shiny Reactive</li>
+</ul>
+<div class="fragment">
+<pre><code>Modelâviewâcontroller (MVC) vs Reative paradaigms.
+Angular.js (Google) vs. React.js (Facebook). 
+Shiny Reactive predates React.js but same paradaigm</code></pre>
+</div>
+<ul>
+<li><p>Input Widgets</p></li>
+<li><p>UI Layouts</p></li>
+<li><p>Plot Example (ggplot)</p></li>
+<li><p>Multiple Ways of Creating a Shiny App</p></li>
+<li><p>Recap</p></li>
+</ul>
+</section><section id="reactive" class="slide level2">
+<h1>(1) Reactive</h1>
+<pre class="sourceCode r"><code class="sourceCode r">ui &lt;-<span class="st"> </span><span class="kw">shinyUI</span>(<span class="kw">fluidPage</span>(
+  
+  <span class="kw">textInput</span>(<span class="dt">inputId =</span> <span class="st">&quot;identity&quot;</span>, 
+            <span class="dt">label =</span> <span class="st">&quot;Who are you?&quot;</span>, 
+            <span class="dt">value =</span> <span class="st">&quot;World&quot;</span>),
+  <span class="kw">textOutput</span>(<span class="st">&quot;helloAns&quot;</span>)
+))
+
+server &lt;-<span class="st"> </span><span class="kw">shinyServer</span>(function(input, output) {
+  
+  <span class="co">#Most caputre input in a reactive function()</span>
+  myAnswer &lt;-<span class="st"> </span><span class="kw">reactive</span>(<span class="kw">paste</span>(<span class="st">&quot;Hello&quot;</span>, input$identity))
+
+  <span class="co">#Note call the function myAnswer()</span>
+  output$helloAns &lt;-<span class="st"> </span><span class="kw">renderText</span>({ <span class="kw">myAnswer</span>() })
+})</code></pre>
+<ul>
+<li class="fragment">all <strong>render</strong>XXX can accept <em>reactive</em> values()</li>
+</ul>
+<ul>
+<li class="fragment">reactive() always listening funciton…</li>
+</ul>
+<!--- want this code chunk to appear incrementally--->
+<div class="fragment">
+<pre class="sourceCode r"><code class="sourceCode r">output$helloAns &lt;-<span class="st"> </span><span class="kw">renderText</span>({<span class="kw">paste</span>(<span class="st">&quot;Hello&quot;</span>, input$identity)})</code></pre>
+</div>
+<aside class="notes">
+<p>example-1.r</p>
+<p>Introduce:</p>
+<ol type="a">
+<li>UI function and the server function</li>
+</ol>
+<ol type="1">
+<li>UI Input - textInput</li>
+<li>Reactive capture and render</li>
+<li>UI Output</li>
+</ol>
+</aside>
+</section><section id="input-widgets" class="slide level2">
+<h1>(2) Input Widgets</h1>
+<pre class="sourceCode r"><code class="sourceCode r">ui &lt;-<span class="st"> </span><span class="kw">shinyUI</span>(<span class="kw">fluidPage</span>(
+  
+  <span class="kw">extInput</span>(<span class="st">&quot;identity&quot;</span>, <span class="st">&quot;Who are you?&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;World&quot;</span>),
+  <span class="kw">selectInput</span>(<span class="st">&quot;language&quot;</span>,<span class="st">&quot;What language would you like?&quot;</span>, 
+              <span class="dt">choices =</span> <span class="kw">c</span>(<span class="st">&quot;English&quot;</span>, <span class="st">&quot;Irish&quot;</span>, <span class="st">&quot;Hindi&quot;</span>)),
+  <span class="kw">textOutput</span>(<span class="st">&quot;helloAns&quot;</span>)
+))
+
+server &lt;-<span class="st"> </span><span class="kw">shinyServer</span>(function(input, output) {
+  
+  lookup &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
+    <span class="dt">language =</span> <span class="kw">c</span>(<span class="st">&quot;English&quot;</span>, <span class="st">&quot;Irish&quot;</span>, <span class="st">&quot;Hindi&quot;</span>),
+    <span class="dt">salutation =</span> <span class="kw">c</span>(<span class="st">&quot;Hi&quot;</span>, <span class="st">&quot;Dia Duit&quot;</span>, <span class="st">&quot;Namaste&quot;</span>))
+  
+  output$helloAns &lt;-<span class="st"> </span><span class="kw">renderText</span>({
+    <span class="kw">paste</span>(lookup$salutation[lookup$language==input$language],
+          input$identity)
+  })</code></pre>
+<aside class="notes">
+<p>example-2.r</p>
+<p>Go over the 3 stage paradigm again, introduce different type of UI Widget</p>
+<p>selectInput. Add selected = “Irish”</p>
+Many types of input widgets available - radiobuttons, check boxes, a) UI function and the server function 1) UI Input - textInput 2) Reactive capture and render 3) UI Output
+</aside>
+</section><section class="slide level2">
+
+<p><img src="images/basic-widgets.png" alt="Basic Widgets" /></p>
+</section><section id="layouts" class="slide level2">
+<h1>(3) Layouts</h1>
+<pre class="sourceCode r"><code class="sourceCode r">ui &lt;-<span class="st"> </span><span class="kw">shinyUI</span>(<span class="kw">fluidPage</span>(
+  
+  <span class="kw">sidebarLayout</span>(
+    
+    <span class="kw">sidebarPanel</span>(
+      <span class="kw">checkboxInput</span>(<span class="st">&quot;dummyBox2&quot;</span>,<span class="st">&quot;Check and uncheck&quot;</span>),
+      <span class="kw">sliderInput</span>(<span class="st">&quot;dummySlider&quot;</span>,<span class="st">&quot;Move the slider&quot;</span>,
+                  <span class="dt">min =</span> <span class="dv">0</span>,<span class="dt">max =</span> <span class="dv">1</span>,<span class="dt">value =</span> <span class="fl">0.5</span>)
+    ), <span class="co">#end of sidebarPanel</span>
+    
+    <span class="kw">mainPanel</span>(
+      <span class="kw">h1</span>(<span class="st">&quot;Not a lot going on here&quot;</span>)
+      ) <span class="co">#end of mainPainel</span>
+  
+    )<span class="co">#end of sidebarLayout</span>
+)<span class="co">#end of fluidPage</span>
+)<span class="co">#end of UI</span>
+
+server &lt;-<span class="st"> </span><span class="kw">shinyServer</span>(function(input, output) {})</code></pre>
+<aside class="notes">
+<p>example-3.r</p>
+<p>Add in a tabpanel tabsetPanel( tabPanel(“Tab1”,h1(“Not a lot in tab1”)), tabPanel(“Tab2”, h2(“Or tab two but smaller”)))</p>
+</aside>
+</section><section id="recap" class="slide level2">
+<h1>Recap</h1>
+<ul>
+<li><p>UI Layout</p></li>
+<li><p>1 - UI Inputs</p></li>
+<li><p>2 - Rendering Functions</p></li>
+<li><p>3 - UI Outputs</p></li>
+</ul>
+<ul>
+<li class="fragment"><a href="https://shiny.rstudio.com/reference/shiny/latest/" class="uri">https://shiny.rstudio.com/reference/shiny/latest/</a></li>
+</ul>
+</section><section id="plot-example" class="slide level2">
+<h1>(4) Plot Example</h1>
+<pre class="sourceCode r"><code class="sourceCode r">ui &lt;-<span class="st"> </span><span class="kw">shinyUI</span>(<span class="kw">fluidPage</span>(
+  
+  <span class="co"># Application title.</span>
+  <span class="kw">titlePanel</span>(<span class="st">&quot;Finally a plot&quot;</span>),
+  
+  <span class="kw">sidebarLayout</span>(
+    <span class="kw">sidebarPanel</span>(
+      <span class="kw">selectInput</span>(<span class="st">&quot;col_i&quot;</span>, <span class="st">&quot;Choose numeric column to graph:&quot;</span>, 
+                  <span class="dt">choices =</span> <span class="kw">c</span>(<span class="kw">colnames</span>(mtcars))),
+      <span class="kw">sliderInput</span>(<span class="st">&quot;numBins_i&quot;</span>,<span class="st">&quot;Choose number of bins&quot;</span>,
+                  <span class="dt">min =</span> <span class="dv">5</span>,<span class="dt">max =</span> <span class="dv">30</span>,<span class="dt">value =</span> <span class="dv">10</span>),
+      <span class="kw">numericInput</span>(<span class="st">&quot;numRows_i&quot;</span>, <span class="st">&quot;Number of rows to view:&quot;</span>, <span class="dv">10</span>)
+    ),<span class="co">#End sidebarPanel</span>
+  
+    <span class="kw">mainPanel</span>(
+      <span class="kw">h4</span>(<span class="st">&quot;Histogram&quot;</span>),
+      <span class="kw">plotOutput</span>(<span class="st">&quot;mHist_o&quot;</span>),
+      
+      <span class="kw">h4</span>(<span class="st">&quot;Observations&quot;</span>),
+      <span class="kw">tableOutput</span>(<span class="st">&quot;mRows_o&quot;</span>)
+    )<span class="co"># End main panel</span>
+  )<span class="co">#end sidebarLayout</span>
+)<span class="co">#end fluidPage</span>
+)<span class="co">#end UI</span>
+  
+ 
+server &lt;-<span class="st"> </span><span class="kw">shinyServer</span>(function(input, output) {
+  
+  <span class="co"># Show the first &quot;n&quot; observations</span>
+  output$mRows_o &lt;-<span class="st"> </span><span class="kw">renderTable</span>({
+    <span class="kw">head</span>(mtcars)
+  })
+ 
+  <span class="co"># Create histogram </span>
+  output$mHist_o =<span class="st"> </span><span class="kw">renderPlot</span>({
+    <span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(<span class="dt">x=</span>qsec)) +<span class="st"> </span><span class="kw">geom_histogram</span>()
+  })
+  
+})</code></pre>
+</section><section id="multiple-ways-of-creating-shiny-apps" class="slide level2">
+<h1>(5) Multiple ways of creating shiny apps</h1>
+<p>Have created <em>ui</em> and <em>server</em> functions() in file and called each function from file.</p>
+<div class="fragment">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">shinyApp</span>(<span class="dt">ui =</span> ui, <span class="dt">server =</span> server)</code></pre>
+</div>
+<ul>
+<li class="fragment">Can also created two file <em>ui.R</em> and <em>server.R</em> save in a directory <em>myApp</em> and from command line of parent directory run. (example-5a)</li>
+</ul>
+<div class="fragment">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">runApp</span>(<span class="st">&quot;~/myApp&quot;</span>)</code></pre>
+</div>
+<div class="fragment">
+<h3>Further learning</h3>
+</div>
+<ul>
+<li class="fragment">rmarkdown with a runtime:shiny (example-5b)</li>
+</ul>
+<ul>
+<li class="fragment">shinydashboard() (example-5c)</li>
+</ul>
+<ul>
+<li class="fragment">rmarkdown + shinydashboard = flexdashboard.rmd (example-5d)</li>
+</ul>
+</section><section id="recap-2" class="slide level2">
+<h1>Recap 2</h1>
+</section><section class="slide level2">
+
+<p><img src="images/1-shiny-widgets.png" alt="Input Widgets" /></p>
+</section><section class="slide level2">
+
+<p><img src="images/2-shiny-output-functions.png" alt="Outputs" /></p>
+</section><section class="slide level2">
+
+<p><img src="images/3-shiny-ui-panel-functions.png" alt="UI Panel" /></p>
+</section><section class="slide level2">
+
+<p><img src="images/4-shiny-layout-functions.png" alt="UI Layout" /></p>
+</section><section class="slide level2">
+
+<p><img src="images/5-shiny-layer-functions.png" alt="UI Layout Layers" /></p>
+</section></section>
+<section><section id="next-steps" class="titleslide slide level1"><h1>Next Steps</h1></section><section id="start-building" class="slide level2">
+<h1>Start Building</h1>
+<p>Enough knowledge to start creating apps. Give it a go. Break some stuff. Get confused. More than happy to help out.</p>
+</section><section id="more-learning-sessions" class="slide level2">
+<h1>More Learning Sessions?</h1>
+<ul>
+<li><p>Best way forward. (Intent of sessions)? More Sessions?</p></li>
+<li><p>reactive - ladder of enlightenment (6 steps)</p></li>
+<li><p>expanding with htmlwidgets</p>
+<ul>
+<li>brushing and linking!!!</li>
+</ul></li>
+<li><p>layouts - shinydashboard, flexdashboard</p></li>
+<li><p>deploying apps on our server using Shiny Server</p>
+<ul>
+<li>using RStudio project and packrat library</li>
+<li><a href="http://wiki.optum.com/display/ARA/Shiny+Server">ARA Shiny Server FAQ</a></li>
+</ul></li>
+</ul>
+</section><section id="links" class="slide level2">
+<h1>Links</h1>
+<style> #links {font-size: 0.6em}</style>
+<h4 id="coursera">Coursera</h4>
+<p><a href="https://www.coursera.org/learn/data-products">Developing Data Products</a> <br> <a href="https://www.youtube.com/playlist?list=PLpl-gQkQivXjTm0HLZZaNXf1LnlFSSVX4">DDP Videos</a> <br> <a href="https://github.com/DataScienceSpecialization/Developing_Data_Products">DDP github</a> <br></p>
+<p><a href="http://stat545.com/shiny00_index.html">Building Shiny apps</a></p>
+<h4 id="rstudio">RStudio</h4>
+<p><a href="http://shiny.rstudio.com/tutorial/">Tutorials</a> <br> <a href="http://shiny.rstudio.com/images/shiny-cheatsheet.pdf">Cheatsheet</a> <br> <a href="http://shiny.rstudio.com/articles/">Articles Really Good</a></p>
+<h4 id="example-apps">Example Apps</h4>
+<p><a href="mhttp://www.showmeshiny.com/">Show Me Shiny - lots of Examples</a> <br> <a href="https://www.rstudio.com/products/shiny/shiny-user-showcase/">User Showcases from RStudio</a> <br> <a href="http://www2.stat.duke.edu/~mc301/shinyed/">Learn some simple stats</a> <br></p>
+<h4 id="videostalks">Videos/Talks</h4>
+<p><a href="https://youtu.be/MrQVzz2POD4" class="uri">https://youtu.be/MrQVzz2POD4</a> - <em>Joe Cheng, Key Package Author</em> <br> <a href="https://youtu.be/HxeHNQojVc44" class="uri">https://youtu.be/HxeHNQojVc44</a> - <em>Winston Chang, Key Package Author</em> <br></p>
+</section></section>
+<section><section id="backup-slides" class="titleslide slide level1"><h1>Backup slides</h1></section><section id="documentation" class="slide level2">
+<h1>Documentation</h1>
+<p>Deployment on Shiny Server</p>
+<ul>
+<li>Confluence page: <a href="http://wiki.optum.com/display/ARA/Shiny+Server"><a href="http://wiki.optum.com/display/ARA/Shiny+Server" class="uri">http://wiki.optum.com/display/ARA/Shiny+Server</a></a>.</li>
+</ul>
+<p>FAQ (related to Shiny Server and deployment)</p>
+<ul>
+<li><a href="http://wiki.optum.com/display/ARA/Shiny+Server+FAQ"><a href="http://wiki.optum.com/display/ARA/Shiny+Server" class="uri">http://wiki.optum.com/display/ARA/Shiny+Server</a></a>.</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="index_files/reveal.js-3.3.0/lib/js/head.min.js"></script>
+  <script src="index_files/reveal.js-3.3.0/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+
+        chalkboard: {
+          toggleNotesButton: true,
+          toggleChalkboardButton: false,
+          theme: 'whiteboard',
+        },
+
+        keyboard: {
+          67: function() { RevealChalkboard.toggleNotesCanvas() },    // toggle notes canvas when 'c' is pressed
+          66: function() { RevealChalkboard.toggleChalkboard() }, // toggle chalkboard when 'b' is pressed
+          46: function() { RevealChalkboard.clear() },    // clear chalkboard when 'DEL' is pressed
+           8: function() { RevealChalkboard.reset() },    // reset chalkboard data on current slide when 'BACKSPACE' is pressed
+          68: function() { RevealChalkboard.download() }, // downlad recorded chalkboard drawing when 'd' is pressed
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'index_files/reveal.js-3.3.0/plugin/notes/notes.js', async: true },
+          { src: 'index_files/reveal.js-3.3.0/plugin/chalkboard/chalkboard.js', async: true },
+        ]
+      });
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>

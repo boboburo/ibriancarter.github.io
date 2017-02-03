@@ -1,0 +1,65 @@
+---
+title: "Example 5c"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(DT)
+library(ggplot2)
+```
+
+This is also a *markdown* document using a template called [flexdashboard](http://rmarkdown.rstudio.com/flexdashboard/).
+
+Flexdashboard allows the creation of nice formatted webpages. A similar effect can be done with [shinydashboard](https://rstudio.github.io/shinydashboard/).
+
+Column {data-width=250}
+-----------------------------------------------------------------------
+
+### Controls Here
+
+```{r}
+selectInput("col", "Choose numeric column to graph:", 
+                  choices = c(colnames(diamonds[,sapply(diamonds, is.numeric)])))
+
+#When input$numBins changes, plot will update.
+sliderInput("numBins","Choose number of bins",
+                  min = 5,max = 30,value = 10)
+
+#when input$nowRows changes, plot will update
+numericInput("numRows", "Number of rows to view:", 10)
+```
+
+### Table here
+
+```{r}
+output$table <- renderDataTable({
+  head(diamonds[,1:4],n=input$numRows)})
+
+ dataTableOutput('table')
+
+```
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart Here
+
+```{r}
+  # Create histogram 
+ output$diaHist = renderPlot({
+    ggplot(diamonds, aes_string(x=input$col)) + geom_histogram(bins=input$numBins)
+})
+
+plotOutput("diaHist")
+
+
+```
+
+
