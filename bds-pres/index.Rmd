@@ -1,5 +1,5 @@
 ---
-title: "ARA: Shiny Learning Session I"
+title: "Shiny Learning Session I"
 subtitle: "Introduction to Shiny"
 author: Brian Carter
 date: Feburary 3rd, 2017
@@ -35,13 +35,13 @@ output:
 
 - These slides were created in rmarkdown using reveal.js. Read more about it  [here](http://rmarkdown.rstudio.com/revealjs_presentation_format.html). 
 
-- You can access these slides on our server at 
+- You can access these slides on here.
 
-[http://apsld0058:3838/r-shiny-20-Jan-17/ara-shiny-presentation.html#/](http://apsld0058:3838/r-shiny-20-Jan-17/ara-shiny-presentation.html#/). 
+[ibriancarter.github.io/bds-pres/index.html](ibriancarter.github.io/bds-pres/index.html). 
 
 - All code for examples and creating these slides are on Codehub: 
 
-[https://codehub.optum.com/payment-integrity-analytics/shiny-server/tree/master](https://codehub.optum.com/payment-integrity-analytics/shiny-server/tree/master). 
+[ibriancarter.github.io/bds-pres/](ibriancarter.github.io/bds-pres/). 
 
 # Introduction 
 
@@ -406,7 +406,7 @@ Enough knowledge to start creating apps. Give it a go. Break some stuff. Get con
 - deploying apps on our server using Shiny Server
 
     + using RStudio project and packrat library
-    + [ARA Shiny Server FAQ](http://wiki.optum.com/display/ARA/Shiny+Server)
+
     
 ## Links {#links}
 
@@ -448,11 +448,7 @@ https://youtu.be/HxeHNQojVc44 - *Winston Chang, Key Package Author* <br>
 
 Deployment on Shiny Server 
 
-- Confluence page: [http://wiki.optum.com/display/ARA/Shiny+Server](http://wiki.optum.com/display/ARA/Shiny+Server). 
-
-
 FAQ (related to Shiny Server and deployment) 
 
-- [http://wiki.optum.com/display/ARA/Shiny+Server](http://wiki.optum.com/display/ARA/Shiny+Server+FAQ). 
 
 
