@@ -37,11 +37,11 @@ output:
 
 - You can access these slides on here.
 
-[ibriancarter.github.io/bds-pres/index.html](ibriancarter.github.io/bds-pres/index.html). 
+[ibriancarter.github.io/bds-pres/index.html](http://ibriancarter.github.io/bds-pres/index.html#/) 
 
 - All code for examples and creating these slides are on Codehub: 
 
-[ibriancarter.github.io/bds-pres/](ibriancarter.github.io/bds-pres/). 
+[https://github.com/iBrianCarter/ibriancarter.github.io/tree/master/bds-pres](https://github.com/iBrianCarter/ibriancarter.github.io/tree/master/bds-pres). 
 
 # Introduction 
 
