@@ -1,3 +1,3 @@
-Presentation for PyData Berlin 2015
+Presentation on LIME (Local Interpretable Machine Learning)
 
-http://ibriancarter.github.io/dublin_pycon_2016/index.html
+ibriancarter.github.io/lime-exploration-jun17/index.html
