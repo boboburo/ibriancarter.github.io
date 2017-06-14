@@ -1,0 +1,343 @@
+---
+title: "lime-experiments"
+author: "Brian Carter"
+date: "10/6/2017"
+output: html_document
+---
+
+This work was inspired by https://shiring.github.io/machine_learning/2017/04/23/lime
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r packages.required}
+## data packages
+library(data.table)
+library(tidyverse)
+
+## model packages
+library(caret)
+library(doParallel)		# parallel processing
+
+library(randomForest)
+library(xgboost) 
+
+# model plotting packages
+library(corrplot)			# plot correlations
+library(pROC)				  # plot the ROC curve
+library(lime)
+
+library(gridExtra)
+
+#theme for lime plotting
+theme.lime.mlt <- function(){
+  theme(
+    legend.position = "none",
+    axis.title.y = element_text(face="bold", size=20),
+    axis.text.x = element_text(size = 10)
+  )
+}
+
+
+```
+
+
+```{r load.data}
+data.file <- "data/covtype15.csv"
+input.data <- read.csv(data.file)
+
+cat.cols <- c("wildernessArea","soilType","climaticZone", "geologicZone")
+input.data <- input.data[,-which(names(input.data) %in% cat.cols)]
+input.data <- input.data[complete.cases(input.data),]
+
+#change the name of the dependent varible to target and make sure a factor
+setnames(input.data, "coverType","target")
+input.data$target <- as.factor(input.data$target)
+
+set.seed(79)
+input.data <- sample_n(input.data, 10000)
+
+rm(data.file, cat.cols)
+```
+
+
+
+
+```{r partition.data}
+set.seed(79)
+index <- createDataPartition(input.data$target, p = 0.7, list = FALSE)
+train.data <- input.data[index, ]
+test.data  <- input.data[-index, ]
+```
+
+```{r cross.val.set}
+# Set up for parallel procerssing
+registerDoParallel(8,cores=8)
+getDoParWorkers()
+
+#five folds with 5-fold cv 
+ctrl <- caret::trainControl(method = "repeatedcv", number = 5, repeats = 5, classProbs = TRUE, 
+                         allowParallel = TRUE,   verboseIter = FALSE)
+
+### Note no preprocessing of the data here, preProcess
+```
+
+
+```{r models}
+knn.tune <- caret::train(target ~., data = train.data , method="knn",        trControl = ctrl)
+rf.tune  <- caret::train(target ~., data = train.data , method="rf",        trControl = ctrl)
+xgb.tune <- caret::train(target ~. , data = train.data, method = "xgbTree", trControl = ctrl)
+mlp.tune <- caret::train(target ~ ., data = train.data, method = "mlp",     trControl = ctrl)
+
+#Can save the trained models for loading again
+save(knn.tune, file="models/cov-type2/knn-tune.Rdata")
+save(rf.tune, file="models/cov-type2/rf-tune.Rdata")
+save(xgb.tune, file="models/cov-type2/xgb-tune.Rdata")
+save(mlp.tune, file="models/cov-type2/mlp-tune.Rdata")
+
+#load the models
+#setwd("~/Desktop/github/lime-exploration/lime-experiment-R/models/cov-type")
+#load("knn-tune.Rdata")
+#load("rf-tune.Rdata")
+#load("xgb-tune.Rdata")
+#load("mlp-tune.Rdata")
+#setwd("~/Desktop/github/lime-exploration")
+
+```
+
+
+```{r get.test.set.prediction}
+pred <- data.frame(sample_id = row.names(test.data),
+                   actual = test.data$target,
+                   knn.pred = as.numeric(predict(knn.tune, test.data)),
+                   rf.pred = as.numeric(predict(rf.tune, test.data)),
+                   xgb.pred = as.numeric(predict(xgb.tune, test.data)),
+                   mlp.pred = as.numeric(predict(mlp.tune, test.data)))
+#from pROC
+roc.multi.knn <- multiclass.roc(pred$actual, pred$knn.pred)
+roc.multi.rf <- multiclass.roc(pred$actual, pred$rf.pred)
+roc.multi.xgb <- multiclass.roc(pred$actual, pred$xgb.pred)
+roc.multi.mlp <- multiclass.roc(pred$actual, pred$mlp.pred)
+
+auc(roc.multi.knn) #0.6524
+auc(roc.multi.rf)  #0.6799
+auc(roc.multi.xgb) #0.664
+auc(roc.multi.mlp) #0.5
+```
+
+
+```{r lime.explainers}
+explain.knn <- lime(train.data, knn.tune, bin_continuous = TRUE, n_bins = 4, n_permutations = 1000)
+explain.rf  <- lime(train.data, rf.tune, bin_continuous = TRUE, n_bins = 4, n_permutations = 1000)
+explain.xgb <- lime(train.data, xgb.tune, bin_continuous = TRUE, n_bins = 4, n_permutations = 1000)
+explain.mlp <- lime(train.data, mlp.tune, bin_continuous = TRUE, n_bins = 4, n_permutations = 1000)
+```
+
+```{r get.predictions.on.test}
+
+#Function to return prediction probs, prediction and flag 
+get.max.pred <- function(model, data){
+  
+  pred <- data.frame(sample.id = row.names(data),
+                     actual = data$target,
+                     predict(model, data, type = "prob"))
+  
+  pred[,3:ncol(pred)] = round(pred[,3:ncol(pred)],3)
+  
+  pred$prediction <- colnames(pred[c(model$finalModel$obsLevels)])[apply(pred[, model$finalModel$obsLevels], 1, which.max)]
+  pred$oracle <- ifelse(pred$actual == pred$prediction, "correct", "wrong")
+  
+  return(pred)
+}
+ 
+pred.knn <- get.max.pred(knn.tune, test.data)
+pred.rf <- get.max.pred(rf.tune, test.data)   
+pred.xgb <- get.max.pred(xgb.tune, test.data)
+pred.mlp <- get.max.pred(mlp.tune, test.data)
+```
+
+```{r gather.predictions}
+#Gather the predictions, to pick interesting examples for explainer
+cols.to.join <- c("sample.id","oracle")
+
+#pull out oracle whether 
+oracle.all <- left_join(pred.knn[,cols.to.join],pred.rf[,cols.to.join], by = c("sample.id"), suffix = c(".knn",".rf"))
+oracle.all <- left_join(oracle.all, pred.xgb[,cols.to.join], by = c("sample.id"))
+setnames(oracle.all, "oracle","oracle.xgb")
+
+oracle.all <- left_join(oracle.all, pred.mlp[,cols.to.join], by = c("sample.id"))
+setnames(oracle.all, "oracle","oracle.mlp")
+
+
+oracle.all <- left_join(pred.knn[,c("sample.id","actual")],oracle.all, by = c("sample.id"))
+
+## Group
+group.preds.oracle <- oracle.all %>% group_by(oracle.knn, oracle.rf, oracle.xgb , oracle.mlp) %>% dplyr::summarise(count = n(), ids = list(sample.id)) %>% ungroup()
+```
+
+
+```{r pull.out.interesting.examples}
+#Get a correct example and a wrong example
+correct.id.list <- group.preds.oracle %>% 
+  filter(oracle.knn == "correct" & oracle.rf == "correct" & oracle.xgb == "correct" & oracle.mlp == "correct") %>%
+  select(ids) 
+
+wrong.id.list <- group.preds.oracle %>% 
+  filter(oracle.knn == "wrong" & oracle.rf == "wrong" & oracle.xgb == "wrong" & oracle.mlp == "wrong") %>%
+  select(ids) 
+
+knn.wrong.id.list <- group.preds.oracle %>% 
+  filter(oracle.knn == "wrong" & oracle.rf == "correct" & oracle.xgb == "correct" & oracle.mlp == "correct") %>%
+  select(ids)
+
+xgb.wrong.id.list <- group.preds.oracle %>% 
+  filter(oracle.knn == "correct" & oracle.rf == "correct" & oracle.xgb == "wrong" & oracle.mlp == "correct") %>%
+  select(ids)
+
+correct.id <- sample(correct.id.list$ids[[1]], 1)
+correct.id.mult <- sample(correct.id.list$ids[[1]], 1)
+wrong.id <- sample(wrong.id.list$ids[[1]], 1)
+knn.wrong.id <- sample(knn.wrong.id.list$ids[[1]], 1)
+xgb.wrong.id <- sample(xgb.wrong.id.list$ids[[1]], 1)
+```
+
+```{r select.example.for.lime.explainer}  
+a.test.data.correct <- test.data[rownames(test.data) == correct.id,-which(names(test.data) %in% c("target"))]
+b.test.data.wrong <- test.data[rownames(test.data) == wrong.id,-which(names(test.data) %in% c("target"))]
+c.test.data.knn.wrong <- test.data[rownames(test.data) == knn.wrong.id,-which(names(test.data) %in% c("target"))]
+d.test.data.xgb.wrong <- test.data[rownames(test.data) == xgb.wrong.id,-which(names(test.data) %in% c("target"))]
+
+#Little cheat here. 
+e.test.data.correct.mult <-  test.data[rownames(test.data)  == 472120,-which(names(test.data) %in% c("target"))]
+
+a.target <- test.data[rownames(test.data) == correct.id,c("target")]
+b.target <- test.data[rownames(test.data) == wrong.id,c("target")]
+c.target <- test.data[rownames(test.data) == knn.wrong.id,c("target")]
+d.target <- test.data[rownames(test.data) == xgb.wrong.id,c("target")]
+
+
+rm(correct.id, wrong.id, knn.wrong.id, xgb.wrong.id)
+```
+
+```{r lime.visual.all.correct}
+#generation explations for correc
+explain.a.knn <- explain.knn(a.test.data.correct, n_labels = 3, n_features = 4)
+explain.a.rf <- explain.rf(a.test.data.correct, n_labels = 3, n_features = 4)
+explain.a.xgb <- explain.xgb(a.test.data.correct, n_labels = 3, n_features = 4)
+
+plot.a.knn <- plot_features(explain.a.knn, ncol = 3) + theme.lime.mlt() + labs(x = "knn")
+plot.a.rf <- plot_features(explain.a.rf, ncol = 3) + theme.lime.mlt() + labs(x = "rf")
+plot.a.xgb <- plot_features(explain.a.xgb , ncol = 3) + theme.lime.mlt() + labs(x = "xgb") + theme(legend.position = "bottom")
+
+setwd("~/Desktop/github/lime-exploration/lime-presentation-jun17/images/lime-output2")
+png(filename = "all-correct-3-models.png", width = 12, height = 7.5,  units = "in", res=240 ,type = "quartz")
+grid.arrange(plot.a.knn, plot.a.rf, plot.a.xgb, nrow =3, top = paste0("True Label: ",a.target," , all classifiers correct"))
+rm(explain.a.knn, explain.a.rf, explain.a.xgb, plot.a.knn, plot.a.rf, plot.a.xgb)
+```
+
+```{r lime.visual.all.wrong}
+#generation explations for all wrong
+explain.b.knn <- explain.knn(b.test.data.wrong, n_labels = 3, n_features = 4)
+explain.b.rf <- explain.rf(b.test.data.wrong, n_labels = 3, n_features = 4)
+explain.b.xgb <- explain.xgb(b.test.data.wrong, n_labels = 3, n_features = 4)
+
+plot.b.knn <- plot_features(explain.b.knn, ncol = 3) + theme.lime.mlt() + labs(x = "knn")
+plot.b.rf <- plot_features(explain.b.rf, ncol = 3) + theme.lime.mlt() + labs(x = "rf")
+plot.b.xgb <- plot_features(explain.b.xgb , ncol = 3) + theme.lime.mlt() + labs(x = "xgb") + theme(legend.position = "bottom")
+
+setwd("~/Desktop/github/lime-exploration/lime-presentation-jun17/images/lime-output")
+png(filename = "all-wrong-3-models.png", width = 12, height = 7.5,  units = "in", res=240 ,type = "quartz")
+grid.arrange(plot.b.knn, plot.b.rf, plot.b.xgb, nrow =3, top = paste0("True Label: ",b.target," , all classifiers wrong"))
+rm(explain.b.knn, explain.b.rf, explain.b.xgb,  plot.b.knn, plot.b.rf, plot.b.xgb)
+```
+
+
+```{r lime.visual.xgb.wrong}
+#generation explations for correc
+explain.d.knn <- explain.knn(d.test.data.xgb.wrong, n_labels = 3, n_features = 4)
+explain.d.rf <- explain.rf(d.test.data.xgb.wrong , n_labels = 3, n_features = 4)
+explain.d.xgb <- explain.xgb(d.test.data.xgb.wrong , n_labels = 3, n_features = 4)
+
+plot.d.knn <- plot_features(explain.d.knn, ncol = 3) + theme.lime.mlt() + labs(x = "knn")
+plot.d.rf <- plot_features(explain.d.rf, ncol = 3) + theme.lime.mlt() + labs(x = "rf")
+plot.d.xgb <- plot_features(explain.d.xgb , ncol = 3) + theme.lime.mlt() + labs(x = "xgb")
+
+setwd("~/Desktop/github/lime-exploration/lime-presentation-jun17/images/lime-output")
+png(filename = "xgb-wrong-models.png", width = 12, height = 7.5,  units = "in", res=240 ,type = "quartz")
+grid.arrange(plot.d.knn, plot.d.rf, plot.d.xgb, nrow =3, top = paste0("True Label: ",d.target," , XGB classifier wrong"))
+rm(explain.d.knn, explain.d.rf, explain.d.xgb,  plot.d.knn, plot.d.rf, plot.d.xgb)
+```
+
+```{r mult.correct.with.xgb}
+explanation.e.rf <- explain.rf(e.test.data.correct.mult, n_labels = 3, n_features = 5)
+
+setwd("~/Desktop/github/lime-exploration/lime-presentation-jun17/images/lime-output")
+png(filename = "explain-output.png", width = 12, height = 3.5,  units = "in", res=240 ,type = "quartz")
+plot_features(explanation.e.rf, ncol = 3) + theme.lime.mlt()
+rm(explanation.e.rf)
+```
+
+
+```{r}
+tibble::glimpse(explanation.e.rf)
+```
+
+```{r}
+example.for.explaining <- test.data %>% filter(row.names(test.data) == 472120)
+write.csv(example.for.explaining, file = "~/Desktop/github/lime-exploration/lime-presentation-jun17/images/lime-output2/explain-output.csv")
+```
+
+
+```{r, explain.plots}
+library(ggthemes)
+
+example.for.explaining.long <- example.for.explaining %>%
+  select(-VD.Hydro) %>%
+  gather(x, y , Elevation:HD.Fire)
+           
+train.data.long <- train.data %>% 
+  filter(target %in% c("aspen","lodge.pine","spruce.fir")) %>%
+  select(-VD.Hydro) %>%
+  gather(x, y , Elevation:HD.Fire)
+
+explain.plot <-  ggplot( train.data.long, aes( x = target, y = y )) +
+  geom_boxplot(alpha = 0.8, color = "grey") +
+  geom_point(data = example.for.explaining.long, color = "red", size = 3) + 
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 30)) +
+  facet_wrap(~x, scales = "free", ncol = 3)
+
+setwd("~/Desktop/github/lime-exploration/lime-presentation-jun17/images/lime-output2")
+png(filename = "explain-output-box.png", width = 12, height = 7.5,  units = "in", res=240 ,type = "quartz")
+```
+
+
+```{r}
+
+example.for.explaining <- test.data %>% filter(row.names(test.data) == 100187)
+example.for.explaining.short <- example.for.explaining %>%
+  select(Elevation, HD.Hydro, HD.Fire, target) %>%
+  gather(x, y , Elevation:HD.Fire)
+
+train.data.long <- train.data %>%
+   filter(target %in% c("aspen","lodge.pine","spruce.fir")) %>% 
+   select(Elevation, HD.Hydro, HD.Fire, target) %>%
+   gather(x, y , Elevation:HD.Fire)
+
+explain.plot.short <-ggplot(train.data.long, aes( x = target, y = y )) +
+  geom_boxplot(alpha = 0.8, color = "grey") +
+  geom_point(data = example.for.explaining.short, color = "red", size = 3) + 
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 30)) +
+  facet_wrap(~x, scales = "free", ncol = 3)
+
+setwd("~/Documents/Projects/learning/lime-exploration/")
+png.file <- "lime-presentation-jun17/images/lime-output2/explain-output-3var.png"
+png(filename = png.file , width = 12, height = 3,  units = "in", res=240)
+```
+
