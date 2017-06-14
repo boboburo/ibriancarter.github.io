@@ -33,31 +33,10 @@ class: left, top
 
 ### Lets see it in action!
 
-### Can it be useful?
-
-### Really can it be useful ?
+### Is it useful? 
 
 ### Further Resources 
 
-???
-- p opens presenter mode.
-- c will clone the slideshow in a separate tab for your viewers.
-
-- First of all thank you to Dominic for organising this session. 
-
-- Todays talk is about Machine Interprability and LIME
-
-- Structure of todays talk. 
-
-- Quicly explain the context of ML Interpretablity, why you might want to use it, or indeed why you might need to use it.
-
-- Talk about the LIME technique and how it works. 
-
-- Going to show you some examples that I have created and how might go about evaulating it. 
-
-- Finally going to go over some of the claims that are made in the LIME paper
-
- - Give me opinon and whether it addresses all its claims and also talk a bit about what it doesn't address. 
 ---
 
 # What is ML Interpretability ?
@@ -68,43 +47,12 @@ class: left, top
 
 &lt;IMG STYLE="position:absolute; TOP:170px; LEFT:500px; WIDTH:350px; HEIGHT:400px" SRC="images/rf-feat-importance.png")&gt;
 
-???
-
-- For a data scientist can often look something like this. 
-
-- Models are evaluating using various accuracy metrics and typical on validataion dataset. 
-
-- data scientist will select a model from a number of alternatives.
-
-- From data product point of view - the evaluation metric of a model may not align with the final data Product goal. 
-
-- story here ??? 
-
-- then question is there truly alignment between the metrics that we can compute and optimize (e.g. accuracy) and the actual metrics of interest such as user engagement and retention. 
 
 ---
 ### Interpretablity vs .Complexity
 
 &lt;IMG STYLE="position:absolute; TOP:175px; LEFT:15px; WIDTH:450px; HEIGHT:400px" SRC="images/model-complex-explain.png")&gt;
 &lt;IMG STYLE="position:absolute; TOP:200px; LEFT:475px; WIDTH:400px; HEIGHT:325px" SRC="images/model-complex-explain2.png")&gt;
-
-???
-
-(Points from Intelligible Models for HealthCare: Predicting Pneumonia Risk and Hospital 30-day Readmission, Microsoft)
-
-- In ML there is often tradeoff must be made between accuracy and intelligibility. 
-
-- CNN can have millions of parameters. 
-
-- More accurate models such as boosted trees, random forests, and neural nets usually are not intelligible 
-
-- More intelligible models such as logistic regression, naive-Bayes, and single decision trees often have significantly worse accuracy. 
-
-- Even a logistic regressions with many coefficents is difficult to interpret.
-
-- This tradeoff sometimes limits the accuracy of models that can be applied in mission-critical applications being able to under-stand, validate, edit an model output is important. 
-
-- right graph minst dataset
 
 ---
 ### ML Interpretability Goal
@@ -113,18 +61,12 @@ class: left, top
 
 - present textual or visual artifacts
 
-- all the data product consumer to augment their prior domain knowledge
+- the data **product** augments the data **consumers** prior knowledge
 
 &lt;IMG STYLE="position:absolute; TOP:300px; LEFT:100px; WIDTH:750px; HEIGHT:350px" SRC="images/darpa-trust.png")&gt;
 
 
-???
 
-- slide for XAI program DARPA
-
--  present textual or visual artifacts that provide qualitative understanding of the relationship between the instance’s components (e.g. words in text, patches in an image) and the model’s prediction
-
-- Humans usually have prior knowledge about the application domain, which they can use to accept (trust) or reject a prediction if they understand the reasoning behind it. 
 
 ---
 # Why ML Interpretability
@@ -132,27 +74,6 @@ class: left, top
 &lt;IMG STYLE="position:absolute; TOP:150px; LEFT:100px; WIDTH:750px; HEIGHT:350px" SRC="images/flu-explain.png")&gt;
 
 
-???
-
-- in many machine learning data products, a user is being asked to interact with the outputs of a model to help them make a decision. 
-
-- there are high stake situations, a doctor will not take an action, just because "the model said so"
-
-- with good reason. 
-
-- In the mid 90’s, a large multi-institutional project was created to evaluate the application of machine learning to important problems in healthcare such as predicting pneumonia risk. 
-
-- the goal was to predict the probability of death (POD) for patients with pneumonia so that high-risk patients could be admitted to the hospital while low-risk patients were treated as outpatients. 
-
-- the most accurate models that could be trained were neural nets, outperforming other methods by a wide margin (the neural net had AUC=0.86 compared to 0.77 for logistic regression),
-
-- Although the neural nets were the most accurate models, after careful consideration they were considered too risky for use on real patients and logistic resgression was used instead. 
-
-- Why?
-
-- the models had learnt the a rule that patients with a history of asthma have lower risk of dying, therefore treat them as an outpatient. 
-
-- this  rule found in logistic regression was counterintuitive. But it reflected a true pattern in the training data: patients with a history of asthma who pre- sented with pneumonia usually were admitted not only to the hospital but directly to the ICU (Intensive Care Unit) -  and thus had lower probality of dying than the general population. 
 ---
 background-image: url(images/all-legal.jpeg)
 background-position: 100% 80%
@@ -160,70 +81,24 @@ background-size: 100% 70%
 
 # Legal Requirements
 
-
-???
-
-- there are legal requirements in place in the USA under the fair credit reporting act. When a creditor takes adverse action and uses a numerical score in a decision the four or five factors that determines those decision most be given to the person it adversely affects. 
-
-- reason codes
-
-- the bank Capital One are on record saying the company would like to use deep learning for all sorts of functions, including deciding who is granted a credit card. 
-
-- But it cannot do that because the legal requirements companies to explain the reason for any such decision to a prospective customer. 
-
-- Late last year Capital One created a research team dedicated to finding ways of making these computer techniques more explainable.
-
-- in Europe the General Data Protection Regulation (GDPR) requires that automated decision making including including profiling must be explainable to the person that is being acted upon. 
-
-- potentially prohibits a wide swath of algorithms currently in use in, e.g., recommendation systems, credit and insurance risk assessments, 
-advertising, and social networks. 
-
-- In its current form, the GDPR’s requirements could require a complete overhaul of standard and widely used algorithmic techniques.
-
 ---
 background-image: url(images/headlines.jpg)
 background-size: 100% 100%
-
-???
-
-- broader societal discussion about AI and how it is influenced our lives more and more
-
-- if an automous driving AI system for a car fails and crashes. We will need to understand why.
 
 
 
 ---
 # Interpretablity for a DS
 
+&lt;IMG STYLE="position:absolute; TOP:150px; LEFT:100px; WIDTH:750px; HEIGHT:250px" SRC="images/lime-leak-compare.png")&gt;
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
 - bias or leakage
 
 - data shift/drift
 
-- feedback loops to improve model 
-
-&lt;IMG STYLE="position:absolute; TOP:150px; LEFT:100px; WIDTH:750px; HEIGHT:250px" SRC="images/lime-leakage.png")&gt;
-
-
-
-???
-
-- but bringing it back into the room, we don't care about all that!!! 
-
-- what about the benefits of for a DS. 
-
-- could interpretability help identify potential points of leakage when training a model. In the LIME paper, the present 
-
-- data leakage - in the LIME paper the present the above example for 
-
-
-
-points from the paper
-- data bias - horse story
-- feedback loops
-
-
-
-In a sense, every time an engineer uploads a machine learning model to production, the engineer is implicitly trusting that the model will make sensible predictions. Such assessment is usually done by looking at held-out accuracy or some other aggregate measure. However, as anyone who has ever used machine learning in a real application can attest, such metrics can be very misleading. Sometimes data that shouldn't be available accidentally leaks into the training and into the held-out data (e.g., looking into the future). Sometimes the model makes mistakes that are too embarrassing to be acceptable. These and many other tricky problems indicate that understanding the model's predictions can be an additional useful tool when deciding if a model is trustworthy or not, because humans often have good intuition and business intelligence that is hard to capture in evaluation metrics. Assuming a “pick step” in which certain representative predictions are selected to be explained to the human would make the process similar to the one illustrated in Figure 2.
+- interactive machine learning (data debuggers!) 
 
 
 ---
@@ -246,77 +121,74 @@ class: inverse
 
 - Explanation
 
---
+&lt;br&gt;&lt;br&gt;
 
 - `\(\xi(x) = \underset{g\in G}{\operatorname{argmax}} \ell(f, g, \pi_x) + \Omega(g)\)`
 
----
-class: inverse
-background-image: url(images/p-frog.png)
-background-position: 95% 85%
-background-size: 50% 50%
+&lt;IMG STYLE="position:absolute; TOP:300px; LEFT:400px; WIDTH:500px; HEIGHT:300px" SRC="images/p-frog.png")&gt;
 
-# What is LIME ?
 
-#### "Why should I trust you"
-##### Explaining the predictions of any classifier
-
-- Marco Tulio Rubiero, Sameer Singh, Carlos Guestrin
-
-### LIME
-
-- Local 
-
-- Interpretable
-
-- Model-Agnostic
-
-- Explanation
-
-- `\(\xi(x) = \underset{g\in G}{\operatorname{argmax}} \ell(f, g, \pi_x) + \Omega(g)\)`
 
 ---
-background-image: url(images/lime-boundary.png)
-background-position: 50% 60%
-background-size: 60% 50%
 
 ### What is LIME
 
-???
+&lt;IMG STYLE="position:absolute; TOP:120px; LEFT:80px; WIDTH:750px; HEIGHT:475px" SRC="images/lime-boundary.png")&gt;
 
+
+
+
+**GENERATE DATASET**
+
+- the perturbed data sample are weighted by their proximity to the original instance under observation. 
+
+- in this way the LIME representation is said to be "locally faithfulyy" - in that the seperator is correct in the immediate vincinity of the example under observation.
+
+- and an important point to note here is that for the generate the datdaset, the the complex modelis considered the oracle. It is the ground truth for the labels, that go into the linear separator. 
 
 
 ---
+background-image: url(images/lime-long.jpg)
+background-position: 50% 0%
+background-size: 80% 22%
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
 
 .pull-left[
+
+### Perturbed Data
+- Numerical
+  - sample from Normal(0,1)
+  - inverse centering/scaling to mean and std of train data.
+
+- Categorical
+  - sample by train distribution
+
+
+  ]
+  
+.pull-right[ 
 ### Linear Model
 - highest weights
 - forward-selection
 - L1-regularization
 
 ### Fitted To
-- perturbed samples
+- perturbed sample
   - weighted be Euclidean distance
-]
-
-.pull-right[
-### Perturbation
-- Numerical (Standardized)
-  - sample from Normal(0,1) of train
-  - inverse centering/scaling to mean and std.
-
-- Categorical
-  - sample by train distribution
 
 ### Discretizer
 - transforms continous data
   - quantile, decile, entropy
+
+
+
 ]
 
 ---
 # Lets see in action
 
-The Forest Data Set: &lt;font size = "3"&gt;&lt;i&gt;(What types of trees grow in an area based on the surrounding characteristics?)&lt;/i&gt;&lt;/font&gt;
+The Forest Data Set:
 
 .pull-left[
 **Variables**
@@ -328,14 +200,12 @@ The Forest Data Set: &lt;font size = "3"&gt;&lt;i&gt;(What types of trees grow i
 &lt;ul&gt; VD.Hydro (vert. dist to water) &lt;/ul&gt;
 &lt;ul&gt; HD.Road (horz. dist to nearest roadway) &lt;/ul&gt; 
 &lt;ul&gt; HD.Fire (horz. dist to nearest wildfire ignition points) &lt;/ul&gt;
-&lt;ul&gt; HS.9am ((0 to 255 index): Hillshade index at 9am, summer solstice) &lt;/ul&gt;
+&lt;ul&gt; HS.9am ((0 to 255 index): Hillshade index at 9am, summer solstice. Lower = brighter) &lt;/ul&gt;
 &lt;ul&gt; HS.noon &lt;/ul&gt;
 &lt;ul&gt; HS.3pm  &lt;/ul&gt;
 &lt;ul&gt; &lt;i&gt;(Wilderness Area, Soil Type, Geological Zone) &lt;/i&gt; categorical, omitted. &lt;/ul&gt;
 &lt;/font&gt;
 ]
-
-
 
 .pull-right[
 **Target**
@@ -349,7 +219,7 @@ The Forest Data Set: &lt;font size = "3"&gt;&lt;i&gt;(What types of trees grow i
 
 ---
 
-# R Plots
+# Lime Code
 
 - Lime is available for [Python](https://github.com/marcotcr/lime) and more recently Thomas Lin Pedersen has implemented in [R](https://github.com/thomasp85/lime).
 
@@ -397,7 +267,7 @@ explained.example &lt;- explainer(test.example,
                                n_labels = 2, n_features = 5, feature_select = "auto")
 plot_features(expalined.exampled, ncol = 2)
 ```
---
+
 &lt;font size="3"&gt;
 
 LIME works with all models that have prediction probabilities. (R, models that work with &lt;mark&gt;predict(type = "prob")&lt;/mark&gt; , Python models that have &lt;mark&gt;predict_proba()&lt;/mark&gt; method). 
@@ -414,9 +284,10 @@ LIME works with all models that have prediction probabilities. (R, models that w
 &lt;ul&gt;  &lt;span style="color: red; background-color: yellow"&gt;feature_select&lt;/span&gt; Default is &lt;i&gt;auto&lt;/i&gt;. If &lt;span style="color: red; background-color: yellow"&gt;n_features &lt;= 6&lt;/span&gt; uses &lt;i&gt;forward selection&lt;/i&gt;. Can also specify &lt;b&gt;feature_select&lt;/b&gt; = c("forward_selection", "highest_weights", "lasso_path")&lt;/ul&gt;
 
 &lt;/font&gt;
+
 ---
 class: top
-background-image: url(images/lime-output/explain-output.png)
+background-image: url(images/lime-output2/explain-output.png)
 background-size: 100% 40%
 background-position: 100% 50%
 
@@ -425,16 +296,16 @@ background-position: 100% 50%
 
 
 ```
-##   X Elevation Aspect Slope HD.Hydro VD.Hydro HD.Road HD.Fire HS.9am
-## 1 1      2950     99    13       95        8    2010     241    221
-##   HS.noon HS.3pm     target
-## 1     108   2732 lodge.pine
+##   X Elevation Aspect Slope HD.Hydro VD.Hydro HD.Road HS.9am HS.noon HS.3pm
+## 1 1      2950     66    25      285      133    1838    235     181     63
+##   HD.Fire     target
+## 1    2911 lodge.pine
 ```
+
+
 
 &lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
 
---
- 
 &lt;font size="3"&gt;
 
 &lt;ul&gt; &lt;i&gt;Cover Type&lt;/i&gt; has been correctly predicted to be &lt;b&gt;Lodgepole Pine&lt;/b&gt;&lt;/ul&gt;
@@ -443,49 +314,57 @@ background-position: 100% 50%
 
 &lt;ul&gt; HD Hyrdo = 95. This does not support the true class. It is more associated with class &lt;b&gt; Spruce Fir &lt;/b&gt;&lt;/ul&gt;
 
---
-
-&lt;ul&gt; Lets Recap - how did we get here &lt;/ul&gt;
-
-
-???
-Write down good explanation here. 
- 
 ---
 class: top, middle
-background-image: url(images/lime-output/explain-output.png)
+background-image: url(images/lime-output2/explain-output.png)
 background-size: 100% 30%
 background-position: 100% 0%
 
 &lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
 
-![](images/lime-output/explain-output-box.png)
+![](images/lime-output2/explain-output-box.png)
 
 ---
-background-image: url(images/lime-output/xgb-wrong-models.png)
+### Recap - How does LIME Work?
+
+&lt;IMG STYLE="position:absolute; TOP:100px; LEFT:80px; WIDTH:850px; HEIGHT:550px" SRC="images/lime-flow.png")&gt;
+
+
+
+---
+background-image: url(images/lime-output2/xgb-wrong-models.png)
 background-size: 100% 80%
 background-position: 50% 80%
 
 ### Compare Models - XGB Wrong
 
----
-### Real World - FRAUD 
+&lt;IMG STYLE="position:absolute; TOP:130px; LEFT:16px; WIDTH:900px; HEIGHT:180px" SRC="images/lime-output2/explain-output-3varA.png")&gt;
+
 
 ---
 class: inverse
-# Really can it be useful ?
+# Is it useful?
 
-### LIME Claims
 
-- claim 1
-- claim 2
-- claim 3
-- claim 4
-talk about it addressing what it claims to do leakage etc, interpretability
+###  Review the Claims 
 
---
+- &lt;p&gt; Explainable Predictions &amp;#10004;&lt;br&gt;
 
-- however! 
+- &lt;p&gt; Practicable benefits &amp;#10004;&lt;br&gt;
+
+- &lt;p&gt; Increase Trust in a model  &amp;#10068;&lt;br&gt;
+
+- &lt;p&gt; Evauluate a model before deploying to &lt;i&gt;real world&lt;/i&gt;  &amp;#10004;&lt;br&gt;
+
+- &lt;p&gt; Identify data drift  &amp;#10068;&lt;br&gt;
+
+There is an additional component to the LIME paper **SP LIME** (submodular pick) not discussed here. 
+
+The aim of **SP LIME** is to pick a subset of instances that cover the most important compenents of a model and avoid selecting instances with similar explanations. 
+
+
+
+
 ---
 ### exploration phase 
 
@@ -495,53 +374,46 @@ talk about it addressing what it claims to do leakage etc, interpretability
 
 https://en.wikipedia.org/wiki/Anscombe%27s_quartet, Francis Anscombe]
 
-???
-- The Datasaurus Dozen show us why visualisation is important -- summary statistics can be the same but distributions can be very different
-- Datasaurus was created by Alberto Cairo
-- Fun alternative to Anscombe Quartet - 
-https://en.wikipedia.org/wiki/Anscombe%27s_quartet
-- Anscombe Quartet  four datasets (1973) that have nearly identical simple descriptive statistics, yet appear very different when graphed. 
 
 ---
 ### Feature Engineering
 
 
 
-Stastical Modelling
-
-At the same time when doing modelling, we seek to minimise the expected error. This can be decomposed in two terms, the Bias and the Variance. Bias represents the distance between the actual model producing the data and the one we use while variance captures the complexity of the model. When our goal is to do statistical modelling to test a causal hypothesis, i.e. explain, we focus on minimising the distance between the actual model and the one we constructed, thus minimise bias. On the other hand when predicting we care mostly about minimising the combined bias and variance, and sometimes this means sacrificing model accuracy, thus increasing bias, for minimising variance, an example of which is regularisation.
-
-some images
+&lt;IMG STYLE="position:absolute; TOP:120px; LEFT:130px; WIDTH:650px; HEIGHT:250px" SRC="images/feat-eng.png")&gt;
 
 
-https://medium.com/@nsorros/to-predict-or-to-explain-ddeb95ba9e25
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+
+
+...some machine learning project succeed and some fail. What makes the difference? Easily the most important factor is the features used.
+  - Pedro Domingos, &lt;i&gt;A Few Usefule things to Know about Machine Learning&lt;/i&gt;
 
 
 ---
-background-image: url(images/links2.jpeg)
-background-position: 0% 0%
-background-size: 25% 25%
-class: left, top
+&lt;IMG STYLE="position:absolute; TOP:15px; LEFT:30px; WIDTH:150px; HEIGHT:100px" SRC="images/links2.jpeg")&gt;
 
-&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
 
-https://github.com/iBrianCarter/lime-exploration.git
+&lt;font size="2"&gt;
 
-### SlideDecks, Videos &amp; Talks
+https://github.com/iBrianCarter/lime-exploration
+
+##### SlideDecks, Videos &amp; Talks
 - [Demystifying Machine Learning using LIME](https://www.slideshare.net/albahnsen/demystifying-machine-learning-using-lime) - 
 Alejandro Correa Bahnsen
 - [Interpretable Machine Learning](https://www.youtube.com/watch?v=u9UUWqVquXo) - Patrick Hall, H2o.
 - [Data Skeptic](https://dataskeptic.com/blog/episodes/2016/trusting-machine-learning-models-with-lime) - Marco Tulio Ribeiro, author of LIME.
 
-### Articles
+##### Articles
 
 - [Interpreting Machine Learning](https://www.oreilly.com/ideas/ideas-on-interpreting-machine-learning) - Patrick Hall, Wen Phan, SriSatish Ambati, H2o.
 - [THe Financial World Wants to Open Black Boxes](https://www.technologyreview.com/s/604122/the-financial-world-wants-to-open-ais-black-boxes/?imm_mid=0f134c&amp;cmp=em-na-na-na-newsltr_fintech_20170501) - Will Knight, MIT
 - [The Dark Secret at the Heart of AI](https://www.technologyreview.com/s/604087/the-dark-secret-at-the-heart-of-ai/) - Will Knight, MIT
 - [DARPA Working on Making AI more Trustworthy](https://futurism.com/darpa-working-make-ai-more-trustworthy/)
 
----
-### Code Examples
+##### Code Examples
 
 - Python
   - [Examples from Marco Tulio Riberio](https://github.com/marcotcr/lime/tree/master/doc/notebooks)
@@ -550,14 +422,15 @@ Alejandro Correa Bahnsen
   - [LIME R package](https://github.com/thomasp85/lime)
   - [Explaining complex machine learning models with LIME](https://shiring.github.io/machine_learning/2017/04/23/lime)
   - [LIME with Shiny](https://github.com/merrillrudd/LIME_shiny)
-
-### Other Approaches
+  
+##### Other Approaches
 
 - [FairML](http://blog.fastforwardlabs.com/2017/03/09/fairml-auditing-black-box-predictive-models.html) - Julius Adebayo, uses perturbation like LIME. 
 - [Explainable Artificial Intelligence,XAI](http://www.darpa.mil/program/explainable-artificial-intelligence) - David Gunning, DARPA. Comprehensive review of active research.
-- [NeuroDecision™](https://www.youtube.com/watch?v=SitMy5oeN_A) - commerical application. Excellent video for explaining ML to lay person.
+- [NeuroDecisionâ¢](https://www.youtube.com/watch?v=SitMy5oeN_A) - commerical application. Excellent video for explaining ML to lay person.
 
-### Conferences
+##### Conferences
+
 ---
 background-image: url(images/whi.png)
 background-size: 100% 100%
@@ -570,10 +443,6 @@ background-size: 30% 30%
 ## Thank you for your attention
 &lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
 ### Any Questions ?
-
-
-???
-Computer Age Statistical Inference - Trevor Hastie, Bradley Efron
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
